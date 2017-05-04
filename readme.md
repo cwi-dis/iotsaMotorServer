@@ -3,6 +3,7 @@
 This is a wifi http server to control a steppermotor, which can then be used to move something, under control of a REST interface. It is built using the iotsa framework for ESP8266.
 
 Home page is <https://github.com/cwi-dis/iotsaMotorServer>.
+This software is licensed under the [MIT license](LICENSE.txt) by the   CWI DIS group, <http://www.dis.cwi.nl>.
 
 One application that has been built with this server is a device that moves a plant (or anything else) up and down, so you can use the height of the plant to visualise the value of a variable. An example of such a variable would be your current electricity consumption, the temperature (inside or outside), the number of minutes until it starts to rain again, or any other scalar value you can find on the internet.
 
