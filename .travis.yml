@@ -12,3 +12,5 @@ deploy:
   file: ".pioenvs/nodemcuv2/firmware.bin"
   on:
     repo: cwi-dis/iotsaMotorServer
+    tags: true
+    all_branches: true
