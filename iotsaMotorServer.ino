@@ -18,8 +18,7 @@
 
 #define WITH_OTA    // Enable Over The Air updates from ArduinoIDE. Needs at least 1MB flash.
 
-ESP8266WebServer server(80);
-IotsaApplication application(server, "Iotsa Stepper Motor Server");
+IotsaApplication application("Iotsa Stepper Motor Server");
 IotsaWifiMod wifiMod(application);
 
 #ifdef WITH_OTA
@@ -81,7 +80,7 @@ IotsaStepperMod::handleMotorIndex() {
   message += ", \"uptime\":";
   message += String(millis());
   message += "}";
-  server.send(200, "application/json", message);
+  server->send(200, "application/json", message);
 }
 
 void IotsaStepperMod::setup() {
@@ -160,9 +159,9 @@ IotsaStepperMod::handleMotorStatus(int num) {
 void
 IotsaStepperMod::handleMotor(int num) {
   long pos = 0;
-  for (uint8_t i=0; i<server.args(); i++){
-    if( server.argName(i) == "pos") {
-      pos = atol(server.arg(i).c_str());
+  for (uint8_t i=0; i<server->args(); i++){
+    if( server->argName(i) == "pos") {
+      pos = atol(server->arg(i).c_str());
       if (pos < 0) pos = 0;
       if (motorLimit[num] && pos > motorLimit[num]) pos = motorLimit[num];
       stepperMot[num].moveTo(pos*STEPS_PER_MM);
@@ -171,7 +170,7 @@ IotsaStepperMod::handleMotor(int num) {
 #endif
     }
   }
-  server.send(200, "application/json", handleMotorStatus(num));
+  server->send(200, "application/json", handleMotorStatus(num));
 }
 
 unsigned long ignoreZeroDetectUntil = 0;
@@ -212,11 +211,11 @@ void IotsaStepperMod::loop() {
 }
 
 void IotsaStepperMod::serverSetup() {
-  server.on("/stepper", std::bind(&IotsaStepperMod::handleMotorIndex, this));
+  server->on("/stepper", std::bind(&IotsaStepperMod::handleMotorIndex, this));
   for (int i=0; i < numMotors; i++) {
     String loc = "/stepper/" + String(i);
-    //server.on(loc.c_str(), [i]() { handleMotor(i); });
-    server.on(loc.c_str(), std::bind(&IotsaStepperMod::handleMotor, this, i));
+    //server->on(loc.c_str(), [i]() { handleMotor(i); });
+    server->on(loc.c_str(), std::bind(&IotsaStepperMod::handleMotor, this, i));
   }
 
   // CHANGE: Add other URLs for your application xxxHandler here
