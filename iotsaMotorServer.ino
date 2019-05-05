@@ -17,6 +17,8 @@
 #include "iotsaWifi.h"
 
 #define WITH_OTA    // Enable Over The Air updates from ArduinoIDE. Needs at least 1MB flash.
+#define WITH_LED    // Enable status led
+#define NEOPIXEL_PIN 15
 
 IotsaApplication application("Iotsa Stepper Motor Server");
 IotsaWifiMod wifiMod(application);
@@ -24,6 +26,12 @@ IotsaWifiMod wifiMod(application);
 #ifdef WITH_OTA
 #include "iotsaOta.h"
 IotsaOtaMod otaMod(application);
+#endif
+
+
+#ifdef WITH_LED
+#include "iotsaLed.h"
+IotsaLedMod ledMod(application, NEOPIXEL_PIN);
 #endif
 
 // Declaration of the Stepper Motor module
