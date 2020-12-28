@@ -1,0 +1,44 @@
+# Created this action based on information found in:
+# - <https://github.com/marketplace/actions/test-compile-for-arduino>
+# - <https://docs.github.com/en/free-pro-team@latest/actions/quickstart>
+name: build-arduino
+on: 
+  push:
+    paths-ignore:
+    - '.github/workflows/build-platformio.yml'
+    - 'docs/**'
+env:
+  iotsa_ref: develop
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arduino-board-fqbn:
+        - esp8266:esp8266:nodemcuv2
+#        - esp32:esp32:esp32thing
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Install iotsa libraries
+      uses: actions/checkout@v2
+      with:
+          repository: cwi-dis/iotsa
+          path: CustomLibrary_iotsa
+          ref: ${{ env.iotsa_ref }}
+      
+    - name: Install constom libraries
+      uses: actions/checkout@v2
+      with:
+          repository: yutter/ArduinoJWT
+          path: CustomLibrary_ArduinoJWT
+      
+    - name: Arduino build
+      uses: ArminJo/arduino-test-compile@v3
+      with:
+        platform-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json,https://dl.espressif.com/dl/package_esp32_index.json
+        required-libraries: Adafruit NeoPixel,Time,Timezone,ArduinoJson,CoAP simple library,ESP32_https_server,esp32_https_server_compat,DHT sensor library
+        arduino-board-fqbn: ${{ matrix. arduino-board-fqbn }}

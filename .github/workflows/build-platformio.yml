@@ -1,0 +1,75 @@
+# Created this action based on information found in:
+# - <https://docs.platformio.org/en/latest/integration/ci/github-actions.html>
+# - <https://docs.github.com/en/free-pro-team@latest/actions/quickstart>
+name: build-platformio
+on: 
+  push:
+    paths-ignore:
+    - '.github/workflows/build-arduino.yml'
+    - 'docs/**'
+  repository_dispatch:
+    types: [rebuild]
+  
+env:
+  iotsa_ref: develop
+  this_product: iotsaNeoClock
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        board:
+        - nodemcuv2
+#        - esp32thing
+        build_flags: [""]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Cache pip
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Cache PlatformIO
+      uses: actions/cache@v2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+
+    - name: Install PlatformIO
+      run: |
+        python -m pip install --upgrade pip
+        pip install --upgrade platformio
+        pio platform install --with-package framework-arduinoespressif8266 espressif8266
+        pio platform install --with-package framework-arduinoespressif32 espressif32
+
+    - name: Install library dependencies
+      run: |
+        pio lib -g install "Adafruit NeoPixel@~1.3.5"
+        pio lib -g install "Time@>=1.6"
+        pio lib -g install "Timezone@~1.2.4"
+        pio lib -g install "ArduinoJson@~6.14.1"
+        pio lib -g install "ArduinoJWT@~1.0.1"
+        pio lib -g install "CoAP simple library@1.3.19"
+        pio lib -g install "esp32_https_server_compat@~1.0.0"
+        pio lib -g install "DHT sensor library@~1.4.1"
+        pio lib -g install "https://github.com/cwi-dis/iotsa.git#${{ env.iotsa_ref }}"
+
+    - name: Run PlatformIO
+      run: |
+        pio run --environment ${{ matrix.board }}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.this_product }}-${{ matrix.board }}-${{ env.iotsa_ref }}.bin
+        path: .pio/build/${{ matrix.board }}/firmware.bin
