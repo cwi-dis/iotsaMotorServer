@@ -40,5 +40,5 @@ jobs:
       uses: ArminJo/arduino-test-compile@v3
       with:
         platform-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json,https://dl.espressif.com/dl/package_esp32_index.json
-        required-libraries: Adafruit NeoPixel,Time,Timezone,ArduinoJson,CoAP simple library,ESP32_https_server,esp32_https_server_compat,DHT sensor library
+        required-libraries: Adafruit NeoPixel,Time,Timezone,ArduinoJson,CoAP simple library,ESP32_https_server,esp32_https_server_compat,DHT sensor library,AccelStepper
         arduino-board-fqbn: ${{ matrix. arduino-board-fqbn }}

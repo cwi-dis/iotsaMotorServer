@@ -12,7 +12,7 @@ on:
   
 env:
   iotsa_ref: develop
-  this_product: iotsaNeoClock
+  this_product: iotsaMotorServer
   
 jobs:
   build:
@@ -54,14 +54,7 @@ jobs:
 
     - name: Install library dependencies
       run: |
-        pio lib -g install "Adafruit NeoPixel@~1.3.5"
-        pio lib -g install "Time@>=1.6"
-        pio lib -g install "Timezone@~1.2.4"
-        pio lib -g install "ArduinoJson@~6.14.1"
-        pio lib -g install "ArduinoJWT@~1.0.1"
-        pio lib -g install "CoAP simple library@1.3.19"
-        pio lib -g install "esp32_https_server_compat@~1.0.0"
-        pio lib -g install "DHT sensor library@~1.4.1"
+        pio lib -g install "AccelStepper"
         pio lib -g install "https://github.com/cwi-dis/iotsa.git#${{ env.iotsa_ref }}"
 
     - name: Run PlatformIO
