@@ -7,6 +7,13 @@ on:
     paths-ignore:
     - '.github/workflows/build-platformio.yml'
     - 'docs/**'
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      iotsa_ref:
+        description: 'iotsa branch, ref or sha'
+        required: true
+        detault: develop
 env:
   iotsa_ref: develop
   
@@ -20,6 +27,17 @@ jobs:
 #        - esp32:esp32:esp32thing
       
     steps:
+    - name: Set env
+      run: |
+        if [ "${{ github.event_name }}" == "repository_dispatch" ]; then 
+            echo "iotsa_ref=${{ github.event.client_payload.iotsa_ref }}" >> $GITHUB_ENV
+            echo "repository_dispatch: iotsa_ref=${{ github.event.client_payload.iotsa_ref }}"
+        fi
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then 
+            echo "iotsa_ref=${{ github.event.inputs.iotsa_ref }}" >> $GITHUB_ENV
+            echo "workflow_dispatch: iotsa_ref=${{ github.event.inputs.iotsa_ref }}"
+        fi
+        
     - name: Checkout code
       uses: actions/checkout@v2
       
