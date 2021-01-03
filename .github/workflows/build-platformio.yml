@@ -74,7 +74,7 @@ jobs:
     - name: Install library dependencies
       run: |
         pio lib -g install "AccelStepper"
-        pio lib -g install "https://github.com/cwi-dis/iotsa.git#${{ env.iotsa_ref }}"
+        pio lib -g install -f "https://github.com/cwi-dis/iotsa.git#${{ env.iotsa_ref }}"
 
     - name: Run PlatformIO
       run: |
