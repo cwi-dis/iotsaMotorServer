@@ -247,7 +247,9 @@ IotsaStepperMod stepperMod(application);
 void setup(void){
   application.setup();
   application.serverSetup();
+#ifndef ESP32
   ESP.wdtEnable(WDTO_120MS);
+#endif
 }
  
 // Standard loop() routine, hands off most work to the application framework
