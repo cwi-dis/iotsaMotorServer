@@ -19,7 +19,7 @@ on:
   
 env:
   iotsa_ref: develop
-  this_product: iotsaMotorServer
+  this_product: unknown
   
 jobs:
   build:
@@ -34,6 +34,7 @@ jobs:
     steps:
     - name: Set env
       run: |
+        echo this_product=$(echo "${{ github.repository }}" | awk -F / '{print $2}' | sed -e "s/:refs//") >> $GITHUB_ENV
         if [ "${{ github.event_name }}" == "repository_dispatch" ]; then 
             echo "iotsa_ref=${{ github.event.client_payload.iotsa_ref }}" >> $GITHUB_ENV
             echo "repository_dispatch: iotsa_ref=${{ github.event.client_payload.iotsa_ref }}"
