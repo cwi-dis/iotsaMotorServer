@@ -28,7 +28,7 @@ jobs:
       matrix:
         board:
         - nodemcuv2
-#        - esp32thing
+        - esp32thing
         build_flags: [""]
 
     steps:
