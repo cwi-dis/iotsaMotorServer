@@ -1,5 +1,8 @@
 # iotsaMotorServer - web server to drive a stepper motor
 
+![build-platformio](https://github.com/cwi-dis/iotsaMotorServer/workflows/build-platformio/badge.svg)
+![build-arduino](https://github.com/cwi-dis/iotsaMotorServer/workflows/build-arduino/badge.svg)
+
 This is a wifi http server to control a steppermotor, which can then be used to move something, under control of a REST interface. It is built using the iotsa framework for ESP8266.
 
 Home page is <https://github.com/cwi-dis/iotsaMotorServer>.
