@@ -81,7 +81,7 @@ jobs:
         pio run --environment ${{ matrix.board }}
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.this_product }}-${{ matrix.board }}-${{ env.iotsa_ref }}.bin
         path: .pio/build/${{ matrix.board }}/firmware.bin
