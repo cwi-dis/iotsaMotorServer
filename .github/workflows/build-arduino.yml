@@ -13,7 +13,7 @@ on:
       iotsa_ref:
         description: 'iotsa branch, ref or sha'
         required: true
-        detault: develop
+        default: develop
 env:
   iotsa_ref: develop
   
@@ -27,7 +27,7 @@ jobs:
 #        - esp32:esp32:esp32thing
       
     steps:
-    - name: Set env
+    - name: Set iotsa_ref in environment
       run: |
         if [ "${{ github.event_name }}" == "repository_dispatch" ]; then 
             echo "iotsa_ref=${{ github.event.client_payload.iotsa_ref }}" >> $GITHUB_ENV
@@ -40,23 +40,33 @@ jobs:
         
     - name: Checkout code
       uses: actions/checkout@v2
-      
-    - name: Install iotsa libraries
-      uses: actions/checkout@v2
-      with:
-          repository: cwi-dis/iotsa
-          path: CustomLibrary_iotsa
-          ref: ${{ env.iotsa_ref }}
-      
-    - name: Install constom libraries
-      uses: actions/checkout@v2
-      with:
-          repository: yutter/ArduinoJWT
-          path: CustomLibrary_ArduinoJWT
-      
-    - name: Arduino build
-      uses: ArminJo/arduino-test-compile@v3
-      with:
-        platform-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json,https://dl.espressif.com/dl/package_esp32_index.json
-        required-libraries: Adafruit NeoPixel,Time,Timezone,ArduinoJson,CoAP simple library,ESP32_https_server,esp32_https_server_compat,DHT sensor library,Ds1302,AccelStepper
-        arduino-board-fqbn: ${{ matrix. arduino-board-fqbn }}
+
+    - name: Setup Arduino CLI
+      uses: arduino/setup-arduino-cli@v2
+
+    - name: Install Arduino platforms and libraries
+      run: |
+        arduino-cli config init --overwrite
+        arduino-cli config set library.enable_unsafe_install true
+        arduino-cli config add board_manager.additional_urls "https://espressif.github.io/arduino-esp32/package_esp32_index.json"
+        arduino-cli config add board_manager.additional_urls "https://arduino.esp8266.com/stable/package_esp8266com_index.json"
+        arduino-cli core update-index
+        arduino-cli core install "esp32:esp32"
+        arduino-cli core install "esp8266:esp8266"
+        arduino-cli lib install "Adafruit NeoPixel"
+        arduino-cli lib install "ArduinoJson"
+        arduino-cli lib install "CoAP simple library"
+        arduino-cli lib install "DHT sensor library"
+        arduino-cli lib install "Adafruit Unified Sensor"
+        arduino-cli lib install "Ds1302"
+        arduino-cli lib install "ESP32Encoder"
+        arduino-cli lib install --git-url https://github.com/yutter/ArduinoJWT
+        arduino-cli lib install --git-url https://github.com/jackjansen/esp32_idf5_https_server
+        arduino-cli lib install --git-url https://github.com/jackjansen/esp32_idf5_https_server_compat
+        arduino-cli lib install --git-url https://github.com/cwi-dis/iotsa#${{ env.iotsa_ref }}
+        arduino-cli lib list
+
+    - name: Build for ${{ matrix.arduino-board-fqbn }}
+      run: |
+        arduino-cli compile --fqbn ${{ matrix.arduino-board-fqbn }}
+  
