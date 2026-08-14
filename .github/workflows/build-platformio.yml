@@ -45,10 +45,10 @@ jobs:
         fi
 
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v7
 
 #     - name: Cache pip
-#       uses: actions/cache@v2
+#       uses: actions/cache@v6
 #       with:
 #         path: ~/.cache/pip
 #         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -56,13 +56,13 @@ jobs:
 #           ${{ runner.os }}-pip-
 # 
 #     - name: Cache PlatformIO
-#       uses: actions/cache@v2
+#       uses: actions/cache@v6
 #       with:
 #         path: ~/.platformio
 #         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v7
 
     - name: Install PlatformIO
       run: |
@@ -81,7 +81,7 @@ jobs:
         pio run --environment ${{ matrix.board }}
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ env.this_product }}-${{ matrix.board }}-${{ env.iotsa_ref }}.bin
         path: .pio/build/${{ matrix.board }}/firmware.bin

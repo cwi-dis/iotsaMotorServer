@@ -39,7 +39,7 @@ jobs:
         fi
         
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v7
 
     - name: Setup Arduino CLI
       uses: arduino/setup-arduino-cli@v2
