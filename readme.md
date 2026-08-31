@@ -14,9 +14,9 @@ At the moment minimum and maximum position and conversion rate of values to step
 
 ## Software requirements
 
-* Arduino IDE, v1.6 or later.
-* The iotsa framework, download from <https://github.com/cwi-dis/iotsa>.
-* The AccelStepper library by Mike McCauley, download from <http://www.airspayce.com/mikem/arduino/AccelStepper/>.
+* PlatformIO (primary) or the Arduino IDE.
+* The [iotsa framework](https://github.com/cwi-dis/iotsa) — pulled in automatically by `platformio.ini`.
+* The AccelStepper library by Mike McCauley — in the PlatformIO / Arduino library registries as `AccelStepper` (`platformio.ini` lists it in `lib_deps`).
 
 ## Hardware requirements
 
@@ -42,11 +42,11 @@ The page also has assembly intructions.
 
 ## Building the software
 
-Near the top you need to define `numMotors` and parameters such as `STEPS_PER_MM`. Most of these will have to be determined using trial and error. `DETECT_LIMIT` governs whether a second microswitch is used (to determine the maximum position, you need at least one microswitch to determine minimum position).
+Near the top of `mainMotorServer.cpp` you need to define `numMotors` and parameters such as `STEPS_PER_MM`. Most of these will have to be determined by trial and error. You need at least one microswitch per motor, to find the minimum (zero) position on boot.
 
-Next you specify GPIO pins for the stepper motor(s) and the microswitch(es).
+Next you specify GPIO pins for the stepper motor(s) and the zero-detect microswitch(es).
 
-Now compile, and flash either using an FTDI or (if your esp board supports it) over-the-air.
+Now compile, and flash either over USB/serial or (if your esp board supports it) over-the-air.
 
 ## Operation
 
