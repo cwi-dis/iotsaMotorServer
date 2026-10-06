@@ -10,17 +10,9 @@
 //
 
 #include "iotsa.h"
-#include "iotsaWifi.h"
-#include "iotsaOta.h"
-#include "iotsaLed.h"
 #include <AccelStepper.h>
 
-#define NEOPIXEL_PIN 15
-
 IotsaApplication application("Iotsa Stepper Motor Server");
-IotsaWifiMod wifiMod(application);
-IotsaOtaMod otaMod(application);               // Over-the-air firmware updates
-IotsaLedMod ledMod(application, NEOPIXEL_PIN); // Status LED
 
 // Declaration of the Stepper Motor module
 class IotsaStepperMod : public IotsaBaseModule {
@@ -64,7 +56,6 @@ int zeroDetectPin[numMotors] = {
 long motorLimit[numMotors] = {
   0
 };
-
 
 void
 IotsaStepperMod::handleMotorIndex() {
@@ -206,7 +197,6 @@ String IotsaStepperMod::info() {
   rv += ".</p>";
   return rv;
 }
-
 
 // Instantiate the module, and install it in the framework
 IotsaStepperMod stepperMod(application);
