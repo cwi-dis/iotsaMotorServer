@@ -143,16 +143,14 @@ IotsaStepperMod::handleMotorStatus(int num) {
 void
 IotsaStepperMod::handleMotor(int num) {
   long pos = 0;
-  for (uint8_t i=0; i<app.server->args(); i++){
-    if( app.server->argName(i) == "pos") {
-      pos = atol(app.server->arg(i).c_str());
-      if (pos < 0) pos = 0;
-      if (motorLimit[num] && pos > motorLimit[num]) pos = motorLimit[num];
-      stepperMot[num].moveTo(pos*STEPS_PER_MM);
+  if (app.server->hasArg("pos")) {
+    pos = atol(app.server->arg("pos").c_str());
+    if (pos < 0) pos = 0;
+    if (motorLimit[num] && pos > motorLimit[num]) pos = motorLimit[num];
+    stepperMot[num].moveTo(pos*STEPS_PER_MM);
 #ifndef MOTOR_KEEP_POWER
-      stepperMot[num].enableOutputs();
+    stepperMot[num].enableOutputs();
 #endif
-    }
   }
   app.server->send(200, "application/json", handleMotorStatus(num));
 }
